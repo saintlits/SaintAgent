@@ -27,7 +27,16 @@ SaintAgent/
 │
 ├── scripts/               # 集成胶水脚本
 │   ├── build.sh           # 一键构建所有组件
-│   └── dev.sh             # 开发环境启动
+│   ├── dev.sh             # 开发环境信息
+│   ├── run-agent.sh       # 🎯 一键启动 Agent 工作流 (GA + Lucinate ± OpenWarp)
+│   ├── run.sh             # 通用启动器 (集成三件套)
+│   ├── chat.sh            # Lucinate TUI 直接启动
+│   ├── serve.sh           # GA HTTP 后端服务管理
+│   ├── openwarp.sh        # OpenWarp 编辑器启动器
+│   ├── status.sh          # 组件健康检查 & 系统信息
+│   ├── logs.sh            # 统一日志查看器
+│   ├── test.sh            # 跨组件测试运行器
+│   └── update.sh          # 依赖更新 & 项目同步
 │
 ├── README.md
 └── .gitignore
@@ -53,6 +62,23 @@ chmod +x scripts/build.sh
 
 ```bash
 ./scripts/dev.sh
+```
+
+## 🔧 脚本速查
+
+```bash
+./scripts/run-agent.sh                  # 🎯 一键启动：GA 服务 + Lucinate TUI
+./scripts/run-agent.sh --openwarp       # 启动三件套（+ OpenWarp 编辑器）
+./scripts/run-agent.sh --status         # 查看服务状态
+./scripts/run-agent.sh --stop           # 停止所有服务
+
+./scripts/build.sh                      # 构建所有组件
+./scripts/dev.sh                        # 开发环境信息
+./scripts/status.sh                     # 详细组件健康检查
+./scripts/logs.sh                       # 查看 GA 服务日志
+./scripts/logs.sh --follow              # 持续跟踪日志
+./scripts/test.sh                       # 运行所有测试
+./scripts/update.sh                     # 更新所有组件依赖
 ```
 
 ## 📜 组件来源
