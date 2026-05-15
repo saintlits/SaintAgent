@@ -18,8 +18,6 @@ vendor/
 # Rust
 target/
 
-# Compiled binaries (handled by subproject .gitignore)
-
 # IDE
 .idea/
 .vscode/
@@ -31,3 +29,24 @@ target/
 # Vim backup files
 *~
 *.un~
+
+# ─── Secrets & Credentials ───
+mykey.py
+*.mykey*
+client_secret*.json
+google_token*.json
+.env
+*.env.local
+
+# ─── Compiled Windows binaries (OpenWarp) ───
+openwarp/app/assets/windows/**/*.dll
+openwarp/app/assets/windows/**/*.exe
+openwarp/app/assets/windows/**/*.pdb
+openwarp/app/assets/windows/**/*.lib
+
+# ─── Dependency caches ───
+.yarn/cache/
+
+# ─── ML model binaries ───
+*.bin
+*.onnx
