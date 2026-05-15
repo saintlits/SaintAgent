@@ -1,0 +1,32 @@
+# Binary
+lucinate
+
+# Environment
+.env
+.env.openai
+.env.hermes
+
+# Coverage
+coverage.out
+coverage.html
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+
+# GoReleaser
+dist/
+
+# Agents
+.claude/*.local.json
+
+# Integration test worktrees
+.claude/worktrees/
+
+# Integration test state
+test/integration/state/

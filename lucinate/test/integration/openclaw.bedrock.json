@@ -1,0 +1,34 @@
+{
+  "gateway": {
+    "auth": {
+      "mode": "token",
+      "token": "lucinate"
+    }
+  },
+  "models": {
+    "providers": {
+      "amazon-bedrock": {
+        "baseUrl": "https://bedrock-runtime.us-east-1.amazonaws.com",
+        "models": [
+          {
+            "id": "__MODEL__",
+            "name": "__MODEL__"
+          }
+        ]
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "amazon-bedrock/__MODEL__"
+      }
+    }
+  },
+  "tools": {
+    "exec": {
+      "security": "full",
+      "ask": "off"
+    }
+  }
+}
