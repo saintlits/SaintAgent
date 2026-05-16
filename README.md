@@ -21,10 +21,6 @@ SaintAgent/
 │   ├── crates/            # 模块化 crate
 │   └── Cargo.toml
 │
-├── openwarp-config/       # OpenWarp 个人配置
-│   ├── settings.toml      # 编辑器设置
-│   └── keybindings.yaml   # 快捷键绑定
-│
 ├── scripts/               # 集成胶水脚本
 │   ├── build.sh           # 一键构建所有组件
 │   ├── dev.sh             # 开发环境信息
