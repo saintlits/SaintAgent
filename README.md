@@ -63,8 +63,12 @@ SaintAgent/
 │         │                                            │        │
 │         │ 终端渲染 (bubbletea)                        │        │
 │         │ emoji/中文支持 (runewidth)                  ├─ LLM   │
+│         │                                            ├─ RTK ℹ️│
+│         │                                            │  输出  │
+│         │                                            │  压缩  │
 │         │                                            ├─ Tools │
 │  ┌──────┴───────┐                                   ├─ Memory│
+│  │              │                                   │  注:  │
 │  │              │                                   └────┬────┘
 │  │  OpenWarp    │ (optional)                             │
 │  │  (Rust)      │                              ┌─────────┴────┐
@@ -85,16 +89,32 @@ SaintAgent/
 2. **API 转发** → Lucinate 通过 `LUCINATE_OPENAI_BASE_URL` 环境变量指向 `http://127.0.0.1:8080/v1`，发送 OpenAI 格式请求
 3. **GA 处理** → GenericAgent HTTP Server 接收请求，启动 Agent Loop：
    - LLM 推理（通过 llmcore 调用模型）
-   - 工具调用（浏览器/OCR/代码执行等）
+   - 工具调用（浏览器/OCR/代码执行等）→ 输出经 **RTK 压缩** 后进入 LLM 上下文
    - 记忆读写（SOP 体系 + 长期记忆）
-4. **流式返回** → GA 以 SSE (Server-Sent Events) 格式流式返回 token，支持实时打字机效果
-5. **渲染输出** → Lucinate 实时渲染响应（Markdown、代码块、工具调用日志）
+4. **RTK 压缩** → 工具调用输出（ls / tree / git / read 等命令）被 RTK 代理命令拦截压缩，大幅降低 token 消耗（典型 50–76%）
+5. **流式返回** → GA 以 SSE (Server-Sent Events) 格式流式返回 token，支持实时打字机效果
+6. **渲染输出** → Lucinate 实时渲染响应（Markdown、代码块、工具调用日志）
 
 ```
 【用户】  ──键盘──▶  Lucinate  ──HTTP──▶  GA Server  ──▶  Agent Loop
-                                                                   │
-                   ◀──SSE stream──  Lucinate  ◀──chunks──────  LLM+Tools
-                          (typewriter effect)
+                                                                 │
+                          ┌──────────────────────────────────────┘
+                          ▼                                     
+                    ┌──────────┐                                 
+                    │  LLM     │  ◀── RTK 压缩后的工具输出      
+                    │  推理     │                                 
+                    └────┬─────┘                                 
+                         │ 需更多信息                            
+                         ▼                                     
+                    ┌──────────┐    ┌──────────────────┐        
+                    │  Tool    │───▶│  RTK (Middleware) │──▶ 回 LLM
+                    │  Execute │    │  ls→rtk ls       │    上下文
+                    │  (code)  │    │  git→rtk git     │        
+                    └──────────┘    │  tree→rtk tree   │        
+                                    │  ...              │        
+                                    └──────────────────┘        
+
+◀──SSE stream──  Lucinate  ◀──chunks──────  最终响应
 ```
 
 ### 启动编排
