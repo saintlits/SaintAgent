@@ -130,6 +130,50 @@ SaintAgent/
 - **添加工具** — GA 的工具系统是模块化的，新增 tool 只需注册 schema 和 handler
 - **换编辑器** — OpenWarp 可用 VSCode/Nvim 等替代，编辑器不依赖其他组件
 
+### RTK 输出压缩层
+
+> [RTK (Real-Time Kit)](https://github.com/rtk-ai/rtk) 是一个 CLI 输出压缩工具，在 GenericAgent 中充当 **Agent 工具执行的中间件**，大幅降低 AI 工具调用的 token 消耗。
+
+在 GenericAgent 的标准数据流中，Agent 执行 bash 命令后，原始输出被完整送入 LLM 上下文窗口。RTK 通过 **命令代理** 机制拦截并压缩管道：
+
+```
+Agent 执行命令                            LLM 收到的输出
+┌──────────┐    ┌──────────────┐    ┌──────────────────────┐
+│  code_run │───▶│  RTK Proxy   │───▶│  compact, structured│
+│  ls -la   │    │  rtk ls -la  │    │  ~530 chars (原 2200)│
+└──────────┘    └──────────────┘    └──────────────────────┘
+```
+
+**工作原理：**
+
+- **命令映射表** — `ga.py` 内置 `RTK_COMMAND_MAP`，将常见命令替换为 RTK 代理版本：
+  `ls→rtk ls`, `tree→rtk tree`, `read→rtk read`, `git→rtk git`, `docker→rtk docker`, `ps→rtk ps`, `grep→rtk grep`, `diff→rtk diff`
+- **智能跳过** — 含管道、重定向、复杂语法的命令不做替换，避免破坏语义
+- **失败回退** — RTK 执行失败时自动回退到原始系统命令
+
+**效果评估：**
+
+| 命令 | 原始输出 | RTK 压缩后 | 节省 |
+|------|---------|-----------|------|
+| `ls -la` | ~2200 chars | ~530 chars | **76%** |
+| `git status` | ~800 chars | ~200 chars | **75%** |
+| `tree` | ~1500 chars | ~400 chars | **73%** |
+
+**启动方式：**
+
+```bash
+# 自动检测（已安装 rtk 时默认启用）
+python ga_http_server.py
+
+# 显式控制
+python ga_http_server.py --rtk           # 强制启用
+python ga_http_server.py --rtk-filter    # 同时启用输出过滤
+python ga_http_server.py --rtk-ultra     # 超紧凑模式
+python ga_http_server.py --no-rtk        # 禁用
+```
+
+RTK 是可选优化层，不影响功能正确性，仅在安装 `rtk` 后生效。它使 Agent 在相同上下文窗口内能处理更多信息密度。
+
 ### 与上游的关系
 
 | 组件 | 基础来源 | SaintAgent 定制 |
