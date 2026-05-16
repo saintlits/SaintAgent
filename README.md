@@ -1,6 +1,6 @@
 # SaintAgent 🧠
 
-圣的个人 AI 全栈工具集 — 深度定制的 Lucinate + GenericAgent + OpenWarp 三件套。
+AI 全栈工具集 — 深度定制的 Lucinate + GenericAgent + OpenWarp 三件套。
 
 ## 📦 项目结构
 
@@ -86,7 +86,7 @@ chmod +x scripts/build.sh
 | 组件 | 上游仓库 | 本地原位置 |
 |------|---------|-----------|
 | Lucinate | `github.com/lucinate-ai/lucinate` | `/Users/Shared/code/lucinate/` |
-| GenericAgent | 私有 | `/Users/Shared/code/app/GenericAgent/` |
+| GenericAgent | `github.com/lsdefine/GenericAgent` | `/Users/Shared/code/app/GenericAgent/` |
 | OpenWarp | `github.com/warpdotdev/OpenWarp` | `/Users/Shared/code/app/openwarp/` |
 
 ## 🛠️ 自定义改动说明
